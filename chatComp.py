@@ -7,11 +7,7 @@ response = client.chat.completions.create(
     #system: instruções para o LLM
     {"role": "system", "content": "You are a helpful assistant."},
     #user: prompt enviado pelo usuário
-    {"role": "user", "content": "Who won the world series in 2020?"},
-    #assistant: a própria IA
-    {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-    #user: prompt enviado pelo usuário
-    {"role": "user", "content": "Where was it played?"}
+    {"role": "user", "content": "Vou viajar em Agosto de 2024 para Londres e quero um roteiro de viagens"}
   ]
 )
 

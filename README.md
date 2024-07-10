@@ -91,3 +91,13 @@ The API key can be imported by running the code below:
 ## EXECUTANDO ARQUIVOS
 
 `python {filename}.py`
+
+## AULA 01.1
+
+Foi adicionada a configuração inicial e testamos o output para entendimento de como podemos fazer uso do LLM;
+
+## AULA 01.2
+
+Alteramos a mensagem enviada pelo usuário para verificar que a resposta que obtivemos da IA é similar a resposta que obtivemos utilizando o frontend do ChatGPT.
+
+![Aula 01.2](image.png)
