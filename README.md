@@ -100,4 +100,37 @@ Foi adicionada a configuração inicial e testamos o output para entendimento de
 
 Alteramos a mensagem enviada pelo usuário para verificar que a resposta que obtivemos da IA é similar a resposta que obtivemos utilizando o frontend do ChatGPT.
 
-![Aula 01.2](image.png)
+![Aula 01.2](github/images/image.png)
+
+## AULA 01.3
+
+### AGENTES DE IA
+
+Para contextualizar o LLM, utilizamos os `Agentes de IA`. Os agentes de IA são estruturas mais complexas que fornecem um conjunto de ferramentas junto ao LLM, permitindo adicionar contexto e permitir uma melhor interação. Essa interação melhorada se da pelo fato de que com os agentes conseguimos passar informações novas, que complementam o contexto. Entre elas, podemos passar, por exemplo, o hotel no qual vamos nos hospedar e pedir referências de locais para um jantar que estejam localizados próxima a nossa estadia.
+
+#### AGENTES DE IA - FERRAMENTAS
+
+Utilizamos o `LangChain` para adicionar agentes que nos permitem fazer buscas na internet, consultar bancos de dados, etc.
+https://www.langchain.com/
+
+A inicialização do `llm` não será mais feita utilizando a lib da OpenAI, mas sim a lib do LangChain.
+
+![Aula 01.3](github/images/image-4.png)
+
+As ferramentas (`tools`) contém as informações que vamos passar para o nosso `llm` no formato de instruções. Na imagem abaixo podemos notar no print que é exibido o nome da ferramenta e a descrição. Essa descrição auxilia a o modelo a saber quando essa ferramenta pode ser útil.
+![Aula 01.3](github/images/image-1.png)
+
+Ao inicializar o `agent` podemos visualizar no terminal que o resultado é um prompt. Esse prompt é um conjunto de informações (instruções) que será aplicado a nossa IA para que ela entenda o passo a passo do que deve ser feito antes de responder ao input do usuário.
+
+- Instruções passadas de forma padrão
+  ![Aula 01.3](github/images/image-2.png)
+
+- Instruções passadas através do `agent`
+  ![Aula 01.3](github/images/image-3.png)
+
+Adicionamos a propriedade `verbose` no `agent` para conseguir visualizar a cadeia de pensamentos da IA ocorrendo em tempo real:
+![Aula 01.3](github/images/image-5.png)
+
+| Fim da AULA 01
+
+#######################################################################################################
