@@ -92,6 +92,8 @@ The API key can be imported by running the code below:
 
 `python {filename}.py`
 
+> # AULA 1
+
 ## AULA 01.1
 
 Foi adicionada a configuração inicial e testamos o output para entendimento de como podemos fazer uso do LLM;
@@ -134,3 +136,22 @@ Adicionamos a propriedade `verbose` no `agent` para conseguir visualizar a cadei
 | Fim da AULA 01
 
 #######################################################################################################
+
+> # AULA 02
+
+## AULA 02.1
+
+### ReAct - Re => Reason / Act => Act
+
+https://react-lm.github.io/
+
+O `prompt` que importamos pronto é no formato `ReAct`. O `Langchain` é no formato `Reason Only` enquanto os ChatGPT é no formato `Act Only`.
+![Aula 02.1](/github/images/image-6.png)
+
+### Correção do Warning
+
+Começamos a aula 2 fazendo a correção do alerta que é exibido no terminal sobre o fim do suporte da função `initialize_agent`.
+
+```jsx
+The function `initialize_agent` was deprecated in LangChain 0.1.0 and will be removed in 0.3.0. Use Use new agent constructor methods like create_react_agent, create_json_agent, create_structured_chat_agent, etc. instead.
+```
