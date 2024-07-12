@@ -161,3 +161,34 @@ The function `initialize_agent` was deprecated in LangChain 0.1.0 and will be re
 ### Refactor função de busca
 
 Movemos tudo que diz respeito ao envio do input do usuário para o LLM para a função `researchAgent`
+
+## AULA 02.3
+
+### Evoluções no Modelo
+
+Atualmente temos esta estrutura pronta
+![Aula 02.3](/github/images/image-7.png)
+
+Nosso objetivo foi evoluir nosso modelo para está estrutura abaixo, com isso conseguiremos trazer uma resposta pro usuário mais completa e com mais detalhes.
+![Aula 02.3](/github/images/image-8.png)
+
+Além disso, adicionamos também um `Supervisor`. Esse Supervisor tem como tarefa conferir/revisar a informação que o Agente trouxe e melhorar o resultado final entregue ao usuário, dessa forma teremos duas LLM's separadas que vão trabalhar em conjunto.
+
+O Supervisor também pode ser um intermediário de vários Agentes, compilando a informação que esses agentes enviam e encaminhando o resultado final como resposta para o usuário. Essa é uma outra forma de usar o Supervisor.
+![Aula 02.3](/github/images/image-9.png)
+![Aula 02.3](/github/images/image-10.png)
+
+### RAG => Retrieval-Augmented Generation
+
+Ao invés de fazer a conexão com o site `dicasdeviagem.com` utilizando a internet, fizemos a busca da informação utilizando o método RAG.
+
+Passo a passo:
+
+- Pegamos o conteúdo que está dentro do site `dicasdeviagens`;
+- Transformamos a informação em um embedding;
+
+  | Embeddings => um Embedding é quando pegamos qualquer tipo de informação e a transformamos em uma informação numérica,para que o modelo de IA possa fazer uso dele de forma mais efetiva.
+
+- Salvamos a informação dentro de banco vetorial.
+
+Essa abordagem pode ser feita com qualquer documento estático. Utilizamos o banco vetorial `Chroma`.

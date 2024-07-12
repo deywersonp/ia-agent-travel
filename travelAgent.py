@@ -1,7 +1,16 @@
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.agent_toolkits.load_tools import load_tools
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain import hub
+
+from langchain_community.document_loaders import WebBaseLoader
+from langchain_community.vectorstores import Chroma
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnableSequence
+
+#bs4 => Utilizado para interpretar o HTML
+import bs4
 
 llm = ChatOpenAI(model="gpt-3.5-turbo")
 
@@ -18,4 +27,52 @@ def researchAgent(query, llm):
   webContext = agent_executor.invoke({ "input": query })
   return webContext["output"]
 
-print(researchAgent(query,llm))
+#Função para carregar os dados dentro do nosso banco vetorial
+def loadData():
+  loader = WebBaseLoader(
+  web_paths= ("https://www.dicasdeviagem.com/inglaterra/",),
+  #É necessário passar identificadores para informar qual parte do HTML será utilizado
+  #No nosso caso, utilizamos classes CSS do site para este fim
+  bs_kwargs=dict(parse_only=bs4.SoupStrainer(class_=("postcontentwrap", "pagetitleloading background-imaged loading-dark"))),
+  )
+  docs = loader.load()
+  #Método utilizado para separar tudo que é texto dentro dessa página HTML
+  text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+  splits = text_splitter.split_documents(docs)
+  vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
+  retriever = vectorstore.as_retriever()
+  return retriever
+
+#Função para buscar documentos relevantes baseado na query do usuário
+def getRelevantDocs(query):
+  retriever = loadData()
+  relevant_documents = retriever.invoke(query)
+  return relevant_documents
+
+#Função para revisar a informação do researchAgent, utilizando tudo que preparamos anteriormente
+def supervisorAgent(query, llm, webContext, relevant_documents):
+  prompt_template = """
+  Você é um gerente de uma agência de viagens. Sua resposta final deverá ser um roteiro de viagem completo e detalhado. 
+  Utilize o contexto de eventos e preços de passagens, o input do usuário e também os documentos relevantes para elaborar o roteiro.
+  Contexto: {webContext}
+  Documento relevante: {relevant_documents}
+  Usuário: {query}
+  Assistente:
+  """
+  
+  prompt = PromptTemplate(
+    input_variables = ["webContext", "relevant_documents", "query"],
+    template = prompt_template
+  )
+
+  sequence = RunnableSequence(prompt | llm)
+  response = sequence.invoke({"webContext": webContext,"relevant_documents": relevant_documents, "query": query })
+  return response
+
+def getResponse(query,llm):
+  webContext = researchAgent(query,llm)
+  relevant_documents = getRelevantDocs(query)
+  response = supervisorAgent(query, llm, webContext, relevant_documents)
+  return response
+
+print(getResponse(query, llm).content)
