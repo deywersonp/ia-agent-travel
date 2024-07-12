@@ -155,3 +155,9 @@ Começamos a aula 2 fazendo a correção do alerta que é exibido no terminal so
 ```jsx
 The function `initialize_agent` was deprecated in LangChain 0.1.0 and will be removed in 0.3.0. Use Use new agent constructor methods like create_react_agent, create_json_agent, create_structured_chat_agent, etc. instead.
 ```
+
+## AULA 02.2
+
+### Refactor função de busca
+
+Movemos tudo que diz respeito ao envio do input do usuário para o LLM para a função `researchAgent`

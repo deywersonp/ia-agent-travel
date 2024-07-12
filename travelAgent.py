@@ -5,19 +5,17 @@ from langchain import hub
 
 llm = ChatOpenAI(model="gpt-3.5-turbo")
 
-tools = load_tools(["ddg-search", "wikipedia"], llm)
-
-prompt = hub.pull("hwchase17/react")
-
-agent = create_react_agent(llm=llm, tools=tools, prompt=prompt)
-
-agent_executor = AgentExecutor(agent=agent, llm=llm, tools=tools, prompt=prompt, verbose=True)
-
-print("- - - - - - - - - - - - - - - - - - - - - -")
-
 query = """
-Vou viajar em Agosto de 2024 para Londres. 
-Quero um roteiro de viagens para mim com os eventos que irão ocorrer na data da viagem e com preço de passagem de São Paulo para Londres.
+Vou viajar para Londres em agosto de 2024.
+Quero que faça um roteiro de viagem para mim com eventos que irão ocorrer na data da viagem e com o preço de passagem de São Paulo para Londres.
 """
 
-agent_executor.invoke({"input": query})
+def researchAgent(query, llm):
+  tools = load_tools(["ddg-search", "wikipedia"], llm=llm)
+  prompt = hub.pull("hwchase17/react")
+  agent = create_react_agent(llm=llm, tools=tools, prompt=prompt)
+  agent_executor = AgentExecutor(agent=agent, llm=llm, tools=tools, prompt=prompt, verbose=True)
+  webContext = agent_executor.invoke({ "input": query })
+  return webContext["output"]
+
+print(researchAgent(query,llm))
