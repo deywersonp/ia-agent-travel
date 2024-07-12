@@ -192,3 +192,18 @@ Passo a passo:
 - Salvamos a informação dentro de banco vetorial.
 
 Essa abordagem pode ser feita com qualquer documento estático. Utilizamos o banco vetorial `Chroma`.
+
+| Fim da AULA 02
+
+#######################################################################################################
+
+# AULA 03
+
+## AULA 03.1
+
+### Sobre o Deploy
+
+O deploy da aplicação será feito na AWS. Antes disso, fizemos a atualização do código para que seja compatível com as chamadas da lambda.
+Inicialmente convertemos nossa aplicação em uma imagem docker. Essa imagem será enviada para o `ECR Registry` da AWS, serviço responsável por fazer todo o versionamento de versões e gestão, e a partir do `ECR` vamos utilizar essa imagem para fazer o deploy de uma `Lambda Function`, uma função serverless para fazer o código rodar.
+
+![Aula 03.1](/github/images/image-11.png)
