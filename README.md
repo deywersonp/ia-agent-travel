@@ -215,3 +215,10 @@ Inicialmente convertemos nossa aplicação em uma imagem docker. Essa imagem ser
 O arquivo `requirements.txt`é o arquivo no qual declaramos todas as dependências que o projeto utiliza. Esse arquivo será utilizado no `Dockerfile` para informar a lista de dependências que precisam ser instaladas antes de executar a aplicação.
 
 | Nota Importante sobre instalação de dependências: Quando fazemos o import de uma lib no Python, fazemos utilizando o `underline` como separador, porém, para fazer a instalação, precisamos substituir o `underline` por `hífen`. Na dúvida, sempre faça a busca pelo nome da dependência no google seguido por `pip install` para confirmar a forma correta de salvar o nome da dependência no arquivo `.txt`.
+
+## AULA 03.3
+
+### Imagem no Docker
+
+O arquivo `Dockerfile` é aonde colocamos as informações sobre a imagem que será criada para uso no docker.
+`LAMBDA_TASK_ROOT` -> Funções que devem ser executadas antes das coisas estarem funcionando.
