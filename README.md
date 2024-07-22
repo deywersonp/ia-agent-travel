@@ -222,3 +222,127 @@ O arquivo `requirements.txt`é o arquivo no qual declaramos todas as dependênci
 
 O arquivo `Dockerfile` é aonde colocamos as informações sobre a imagem que será criada para uso no docker.
 `LAMBDA_TASK_ROOT` -> Funções que devem ser executadas antes das coisas estarem funcionando.
+
+`docker build --platform linux/x86_64 -t travelagent .`
+
+### Conta na AWS
+
+Para seguir para as próximas etapas de deploy, criamos uma conta na AWS.
+
+### ECR
+
+Após buscar por `ECR` na AWS, clicar em `Criar Repositório` e informar o nome desse novo repositório.
+
+![Aula 03.3](/github/images/image-12.png)
+
+### AWS Command Line Interface
+
+Fizemos uso da AWS CLI para fazer o upload da nossa imagem do docker para a AWS.
+https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+
+#### IAM - Usuário não criado
+
+Caso você acesso o IAM e não tenha um usuário criado, vamos ensinar rapidamente como criar um com a permissão necessário
+
+1. Acesse o IAM
+2. Clique na opção `Usuários` no menu lateral esquerdo
+3. Clique no botão `Criar usuário`
+
+   ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/f1cc6d84-3852-4ba0-a14f-aed47f1d62ea/2e9ef969-1519-499a-90fb-65c75f22753f/Untitled.png)
+
+4. Dê o nome que quiser ao usuário e clique em `Próximo`
+
+   ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/f1cc6d84-3852-4ba0-a14f-aed47f1d62ea/79c6d947-3cda-4fcc-9282-0ea3017d9b3d/Untitled.png)
+
+5. Selecione a opção `Anexar políticas diretamente` e selecione `AdministratorAccess`. Clique em `Próximo`
+
+   ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/f1cc6d84-3852-4ba0-a14f-aed47f1d62ea/bebd59c3-48b6-494c-9bb9-e0fe15a6dcb9/Untitled.png)
+
+6. Revise as informações. Se tudo estiver certo, clique em `Criar usuário`
+
+   ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/f1cc6d84-3852-4ba0-a14f-aed47f1d62ea/8659682b-d653-4b06-b18e-ccf633d20818/Untitled.png)
+
+7. Acesse o usuário criado
+
+8. Clique em `Security Credentials`
+
+9. Navegue até `Access Keys` e clique em `Create access key`
+
+10. Em `Use Case` selecione a opção `CLI`, confirme a box no canto inferior da página
+
+11. Defina uma tag. No nosso caso colocamos: `cli-deywerson`
+
+### AWS Configure
+
+1 - Execute o comando `aws configure --profile {profile_name}`
+
+2 - Informe as credenciais do `IAM` da AWS (Access Key, Secret Access Key e Region. Output pode deixar vazio).
+
+### Enviando Imagem do Docker para AWS
+
+1 - Em ECR, clique no repositório criado
+
+2 - Clique em `View Push Commands`
+![Aula 03.3](/github/images/image-13.png)
+
+3 - Execute as linhas de comando para `macOS/Linux`. No primeiro passo, que refere-se a conseguir o token de autenticação fizemos uma pequena modificação na linha de comando para que o login fosse efetuado utilizando o profile `deywersontest`, criado anteriormente durante a configuração do profile aws.
+`aws ecr get-login-password --region eu-central-1  --profile deywersontest | docker login --username AWS --password-stdin 008971639242.dkr.ecr.eu-central-1.amazonaws.com`
+
+4 - O segundo passo pulamos, pois já haviamos feito build do nosso projeto
+
+5 - Execute as linha de código do passo 3 e 4 mostrados nas instruções de `Push commands`.
+
+### Criando função Lambda
+
+1 - Vá em Lambdas
+
+2 - `Create a function`
+
+3 - Defina o nome da função e faça a busca pelo repositório, digitando o nome atribuído ao repositório anteriormente
+
+![Aula 03.3](/github/images/image-14.png)
+
+4 - Confirme a criação da função
+
+5 - Vamos editar algumas configurações dessa função. A primeira delas será a `memória`, que vai para `512`, `timeout` para `15min`. Salve.
+
+6 - O próximo passo é configurar a variável de ambiente utilizando a chave da OPENAI, portanto clique em `Configuration` e no canto esquerdo clique em `Environment variables`. Clique em `Edit`, `Add Environment Variable` e informe o nome e o valor da nova chave. Salve essas alterações.
+
+### Rebuild do Projeto
+
+Sempre que alguma alteração for feita no código, precisamos fazer uma nova build, adicionar nova tag e fazer o push para o repositório.
+Por fim, precisamos acessar a lambda que criamos e atualizar o ponteiro de referência do código.
+
+1 - `docker build --platform linux/x86_64 -t travelagent .`
+
+2 - `docker tag travelagent:latest 008971639242.dkr.ecr.eu-central-1.amazonaws.com/travelagent:latest`
+
+3 - `docker push 008971639242.dkr.ecr.eu-central-1.amazonaws.com/travelagent:latest`
+
+4 - Busque por `Lambdas`
+
+5 - Clique na aba `Image`
+
+6 - `Deploy new image`
+
+7 - Informe o nome do repositório
+
+8 - Selecione a imagem que contém a tag `latest`
+
+9 - Salve as alterações
+
+### Testando a LAMBDA
+
+1 - Clique na aba `Test`
+
+2 - Defina o nome do Teste
+
+3 - Atualize o corpo do teste baseado no que o código espera receber. No nosso caso, esperamos receber um `JSON` com a query `question` que tem como valor uma string.
+
+![Aula 03.3](/github/images/image-15.png)
+
+4 - Salve o teste
+
+5 - Para executar basta clicar em `Test`
+
+![Aula 03.3](/github/images/image-16.png)
