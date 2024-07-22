@@ -80,20 +80,20 @@ def getResponse(query,llm):
   return response
 
 def lambda_handler(event, context):
-  query = event.get("question")
-  response = getResponse(query, llm).content
-  return {"body": response, "status": 200}
-
-  # body = json.loads(event.get('body', {}))
-  # query = body.get('question', 'Parametro question não fornecido')
+  # query = event.get("question")
   # response = getResponse(query, llm).content
-  # return {
-  #   "statusCode": 200,
-  #   "headers": {
-  #     "Content-Type": "application/json"
-  #   },
-  #   "body": json.dumps({
-  #     "message": "Tarefa concluída com sucesso",
-  #     "details": response
-  #   }), 
-  # }
+  # return {"body": response, "status": 200}
+
+  body = json.loads(event.get('body', {}))
+  query = body.get('question', 'Parametro question não fornecido')
+  response = getResponse(query, llm).content
+  return {
+    "statusCode": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": json.dumps({
+      "message": "Tarefa concluída com sucesso",
+      "details": response
+    }), 
+  }

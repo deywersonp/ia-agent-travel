@@ -346,3 +346,65 @@ Por fim, precisamos acessar a lambda que criamos e atualizar o ponteiro de refer
 5 - Para executar basta clicar em `Test`
 
 ![Aula 03.3](/github/images/image-16.png)
+
+## AULA 03.4
+
+### ALB
+
+Utilizamos o `ALB` - Application Load Balance conectado a Lambda para disponibilizar o nosso servido para uso externo
+
+![Aula 03.4](/github/images/image-17.png)
+
+Para fazer uso do Load Balancers utilizamos o `EC2` da AWS.
+
+1 - Após procurar por `EC2`, clique em `Load Balancing` no menu esquerdo
+
+2 - Clique em `Create load balancer`
+
+3 - Selecione o Load Balancer que mais se enquadra a finalidade do projeto. No nosso caso foi o `Application Load Balancer`
+
+4 - Em `Basic Configuration` defina o nome da aplicação. Como nosso serviço ficará disponível na internet, selecionamos o schema `Internet facing`. Mantenha o `IPV4` selecionado
+
+![Aula 03.4](/github/images/image-18.png)
+
+5 -Em `Network Mapping` deixe o `VPC` que vem por padrão. Marque todos os `subnets` disponíveis
+
+![Aula 03.4](/github/images/image-19.png)
+
+6 - Em `Security groups` mantenha o valor default
+
+![Aula 03.4](/github/images/image-20.png)
+
+7 - Em `Listeners and routing` vamos utilizar o protocolo `HTTP` apenas para remover a necessidade de configurar um certificado SSL. Utilizamos a porta `80`.
+
+7.1 - Criamos um novo `target group` para indicar a lambda que vamos utilizar nesse ALB
+
+7.2 - Selecione `Lambda function`, e defina o target group name, clique em `Next`
+
+7.3 - Informe qual lambda function e qual versão deverá ser utilizada e confirme a criação em `Create target group`
+
+![Aula 03.4](/github/images/image-21.png)
+
+8 - Defina a `Default action` para ser o novo target group criado
+
+![Aula 03.4](/github/images/image-22.png)
+
+9 - Confirme a criação do `Load Balance`
+
+Dessa forma já temos uma API exposta que pode ser utilizada.
+
+### Ajustes no ALB - Segurança
+
+1 - Com o load balance criado, vamos acessar a aba de `Security`
+
+2 - Clique no `Security Group` listado
+
+3 - Na nova página, vamos editar as `Inbound Rules`
+
+4 - Altere as informações conforme a imagem abaixo. Essas configurações vão permitir que qualquer endereço IP tenha acesso a nossa aplicação.
+
+![Aula 03.4](/github/images/image-23.png)
+
+5 - Atualizamos o `lambda_handler` para ser compatível com a chamada de API
+
+6 - Utilizamos o postman para executar a chamada para a API, para efeito de testes. o `DNS` da API está disponível nos detalhes do nosso Load Balance.
